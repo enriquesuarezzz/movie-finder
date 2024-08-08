@@ -6,6 +6,9 @@ module.exports = {
       colors: {
         'light-blue': '#61dafb',
       },
+      fontFamily: {
+        onest: ['Onest, sans-serif'],
+      },
     },
   },
   plugins: [],
