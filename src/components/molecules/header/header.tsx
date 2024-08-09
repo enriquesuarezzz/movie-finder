@@ -1,6 +1,6 @@
 export function Header() {
   return (
-    <header className="h-fit  w-full bg-gradient-to-r from-blue-950/80  to-blue-700/80">
+    <header className="mx-10 h-fit  rounded-3xl  bg-gradient-to-r from-blue-950/80 to-blue-700/80">
       <div className="flex flex-col ">
         <div className="flex flex-col items-center justify-center pt-6 text-center ">
           <div className="text-[35px] font-bold text-white md:text-[40px] lg:text-[50px]">
