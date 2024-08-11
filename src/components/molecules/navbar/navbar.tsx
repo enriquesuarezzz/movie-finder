@@ -8,8 +8,9 @@ export function Navbar() {
       <div className="flex items-center gap-2 font-onest text-xl font-bold md:gap-8 ">
         <Logo />
         <button className="hover:text-blue-500">MovieFinder</button>
-        <button className="hover:text-blue-500">Home</button>
-        <button className="hover:text-blue-500">My Movies</button>
+        <button className="hidden hover:text-blue-500 md:flex">
+          My Movies
+        </button>
       </div>
       <div className="flex items-center gap-2 pr-2 font-bold md:gap-8 md:pr-10">
         <button>
