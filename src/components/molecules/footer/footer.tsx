@@ -37,10 +37,7 @@ export function Footer() {
         </div>
         <hr className="my-2 border-gray-200 sm:mx-auto lg:my-8 dark:border-gray-700" />
         <span className="block text-center text-sm text-gray-500 dark:text-gray-400">
-          © 2024{' '}
-          <a href="https://flowbite.com/" className="hover:underline">
-            Enrique Suarez
-          </a>
+          <p> © 2024 Enrique Suarez </p>
         </span>
       </div>
     </footer>
