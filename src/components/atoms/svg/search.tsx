@@ -1,10 +1,12 @@
-export default function Search() {
+import { SVGProps } from 'react'
+export default function Search(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="25"
       height="25"
       viewBox="0 0 24 24"
+      {...props}
     >
       <path
         fill="#000000"
