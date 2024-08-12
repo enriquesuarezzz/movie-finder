@@ -1,4 +1,5 @@
-export default function Burguer() {
+import { SVGProps } from 'react'
+export default function Burguer(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       fill="none"
@@ -6,14 +7,15 @@ export default function Burguer() {
       viewBox="0 0 24 24"
       width="24"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
-      <g clip-path="url(#clip0_105_1724)">
+      <g clipPath="url(#clip0_105_1724)">
         <path
           d="M3 6.00098H21M3 12.001H21M3 18.001H21"
           stroke="#292929"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
         />
       </g>
       <defs>
