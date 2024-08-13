@@ -22,7 +22,7 @@ This project is a full-stack movie searcher application built using modern web t
 
 ## Running locally in development mode
 
-To get started, just clone the repository and run `npm install && npm run dev`:
+To get started, just clone the repository and run `npm install && npm start`:
 
     git clone https://github.com/enriquesuarezzz/movie-finder.git
     npm install
