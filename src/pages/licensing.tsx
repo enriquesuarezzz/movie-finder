@@ -1,7 +1,7 @@
-export function About() {
+export function Licensing() {
   return (
     <div>
-      <h1>About</h1>
+      <h1>Licensing</h1>
     </div>
   )
 }
