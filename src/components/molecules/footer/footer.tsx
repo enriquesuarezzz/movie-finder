@@ -23,16 +23,6 @@ export function Footer() {
                 My Movies
               </a>
             </li>
-            <li>
-              <a href="#" className="me-4 hover:underline md:me-6">
-                Licensing
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                Contact
-              </a>
-            </li>
           </ul>
         </div>
         <hr className="my-2 border-gray-200 sm:mx-auto lg:my-8 dark:border-gray-700" />
