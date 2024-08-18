@@ -28,3 +28,7 @@ body {
     transform: rotate(360deg);
   }
 }
+html {
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
