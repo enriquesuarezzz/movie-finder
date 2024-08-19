@@ -2,7 +2,7 @@ import { Logo } from '../../atoms/svg/logo'
 
 export function Footer() {
   return (
-    <footer className="fixed bottom-0  w-full rounded-t-lg bg-gray-900 ">
+    <footer className="bottom-0 mt-10 flex w-full rounded-t-lg bg-gray-900 md:mt-16">
       <div className="mx-auto w-full max-w-screen-xl p-4 md:py-8">
         <div className="flex flex-col items-center  md:flex-row md:justify-between">
           <div className="flex items-center justify-center gap-2 pb-6">
