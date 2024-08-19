@@ -14,7 +14,7 @@ export function MoviesSwiper() {
   return (
     <section className="flex flex-col pt-5 md:pt-10">
       <h1 className="pb-4 font-onest text-4xl font-bold md:pb-10 md:text-7xl">
-        Movies
+        Genre title when Api is ready
       </h1>
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -23,36 +23,15 @@ export function MoviesSwiper() {
         loop={true}
       >
         <SwiperSlide className="max-w-[300px]">
+          <h1>Movies card when api is ready</h1>
           <img src="/images/header_image.avif" alt="movies posters" />
         </SwiperSlide>
         <SwiperSlide className="max-w-[300px]">
+          <h1>Movies card when api is ready</h1>
           <img src="/images/header_image.avif" alt="movies posters" />
         </SwiperSlide>
         <SwiperSlide className="max-w-[300px]">
-          <img src="/images/header_image.avif" alt="movies posters" />
-        </SwiperSlide>
-        <SwiperSlide className="max-w-[300px]">
-          <img src="/images/header_image.avif" alt="movies posters" />
-        </SwiperSlide>
-        <SwiperSlide className="max-w-[300px]">
-          <img src="/images/header_image.avif" alt="movies posters" />
-        </SwiperSlide>
-        <SwiperSlide className="max-w-[300px]">
-          <img src="/images/header_image.avif" alt="movies posters" />
-        </SwiperSlide>
-        <SwiperSlide className="max-w-[300px]">
-          <img src="/images/header_image.avif" alt="movies posters" />
-        </SwiperSlide>
-        <SwiperSlide className="max-w-[300px]">
-          <img src="/images/header_image.avif" alt="movies posters" />
-        </SwiperSlide>
-        <SwiperSlide className="max-w-[300px]">
-          <img src="/images/header_image.avif" alt="movies posters" />
-        </SwiperSlide>
-        <SwiperSlide className="max-w-[300px]">
-          <img src="/images/header_image.avif" alt="movies posters" />
-        </SwiperSlide>
-        <SwiperSlide className="max-w-[300px]">
+          <h1>Movies card when api is ready</h1>
           <img src="/images/header_image.avif" alt="movies posters" />
         </SwiperSlide>
       </Swiper>
