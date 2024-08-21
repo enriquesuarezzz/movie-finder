@@ -1,12 +1,15 @@
 // server/db.js
-import { createPool } from "mysql2";
+import { createPool } from "mysql2/promise";
 
-// Create a connection pool
+// Database connection pool
 const pool = createPool({
-  host: "localhost", // Replace with MySQL host when its ready
-  user: "root", // Replace with MySQL username
-  password: "password", // Replace with  MySQL password
-  database: "my_database", // Replace with  database name
+  host: "your-database-host", // Replace with  database host when its ready
+  user: "your-database-username", // Replace with database username when its ready
+  password: "your-database-password", // Replace with database password when its ready
+  database: "your-database-name", // Replace with database name when its ready
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-export default pool.promise();
+export default pool;
