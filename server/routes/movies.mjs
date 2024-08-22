@@ -1,7 +1,7 @@
 // server/routes/movies.js
 import { Router } from "express";
 const router = Router();
-import { query } from "../db";
+import { query } from "../db.mjs";
 
 // Get all movies
 router.get("/", async (req, res) => {

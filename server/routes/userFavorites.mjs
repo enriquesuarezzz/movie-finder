@@ -1,7 +1,7 @@
 // server/routes/userFavorites.js
 import { Router } from "express";
 const router = Router();
-import { query } from "../db";
+import { query } from "../db.mjs";
 
 // Get all favorite movies for a user
 router.get("/:userId", async (req, res) => {

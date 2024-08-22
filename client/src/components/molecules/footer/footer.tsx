@@ -14,22 +14,22 @@ export function Footer() {
 
           <ul className="mb-6 flex flex-wrap items-center text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
             <li>
-              <a href="#" className="me-4 hover:underline md:me-6">
+              <a href="/" className="me-4 hover:underline md:me-6">
                 Home
               </a>
             </li>
             <li>
-              <a href="#" className="me-4 hover:underline md:me-6">
+              <a href="/" className="me-4 hover:underline md:me-6">
                 My Movies
               </a>
             </li>
             <li>
-              <a href="#" className="me-4 hover:underline md:me-6">
+              <a href="/" className="me-4 hover:underline md:me-6">
                 Licensing
               </a>
             </li>
             <li>
-              <a href="#" className="hover:underline">
+              <a href="/" className="hover:underline">
                 Contact
               </a>
             </li>

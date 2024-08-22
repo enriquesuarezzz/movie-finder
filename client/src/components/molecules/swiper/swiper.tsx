@@ -1,5 +1,4 @@
 import React from 'react'
-import { Swiper as SwiperCore } from 'swiper/types'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import 'swiper/css'
