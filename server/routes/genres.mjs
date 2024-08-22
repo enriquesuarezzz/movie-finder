@@ -1,24 +1,22 @@
-// server/routes/actors.js
-import { Router } from "express";
-const router = Router();
-import { query } from "../db";
+import express from "express";
+const router = express.Router();
+import { query } from "../db.mjs";
 
-// Get all actors
+//get all genres
 router.get("/", async (req, res) => {
   try {
-    const [actors] = await query("SELECT * FROM actors");
-    res.json(actors);
+    const [genres] = await db.query("SELECT * FROM genres");
+    res.json(genres);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// Create a new actor
 router.post("/", async (req, res) => {
   const { name } = req.body;
 
   try {
-    const [result] = await query("INSERT INTO actors (name) VALUES (?)", [
+    const [result] = await db.query("INSERT INTO genres (name) VALUES (?)", [
       name,
     ]);
     res.status(201).json({ id: result.insertId, name });
