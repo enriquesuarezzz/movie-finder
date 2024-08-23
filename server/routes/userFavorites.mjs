@@ -1,12 +1,12 @@
-// server/routes/userFavorites.js
 import { Router } from "express";
+import pool from "../db.mjs";
+
 const router = Router();
-import { query } from "../db.mjs";
 
 // Get all favorite movies for a user
 router.get("/:userId", async (req, res) => {
   try {
-    const [favorites] = await query(
+    const [favorites] = await pool.query(
       `
       SELECT movies.* 
       FROM user_favorites 
@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
   const { user_id, movie_id } = req.body;
 
   try {
-    await query(
+    await pool.query(
       "INSERT INTO user_favorites (user_id, movie_id) VALUES (?, ?)",
       [user_id, movie_id]
     );

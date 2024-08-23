@@ -1,12 +1,12 @@
-// server/routes/directors.js
 import { Router } from "express";
+import pool from "../db.mjs";
+
 const router = Router();
-import { query } from "../db.mjs";
 
 // Get all directors
 router.get("/", async (req, res) => {
   try {
-    const [directors] = await query("SELECT * FROM directors");
+    const [directors] = await pool.query("SELECT * FROM directors");
     res.json(directors);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -18,9 +18,10 @@ router.post("/", async (req, res) => {
   const { name } = req.body;
 
   try {
-    const [result] = await query("INSERT INTO directors (name) VALUES (?)", [
-      name,
-    ]);
+    const [result] = await pool.query(
+      "INSERT INTO directors (name) VALUES (?)",
+      [name]
+    );
     res.status(201).json({ id: result.insertId, name });
   } catch (err) {
     res.status(500).json({ message: err.message });
