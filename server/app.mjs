@@ -12,12 +12,14 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.disable("x-powered-by");
+app.use("/api", moviesRouter); // Mount the router at /api
 
-app.use("./genres", genresRoutes);
-app.use("./directors", directorsRouter);
-app.use("./movies", moviesRouter);
-app.use("./actors", actorsRouter);
-app.use("./userFavorites", userFavoritesRouter);
+app.use("/api/genres", genresRoutes);
+app.use("/api/directors", directorsRouter);
+app.use("/api/movies", moviesRouter);
+app.use("/api/actors", actorsRouter);
+app.use("/api/userFavorites", userFavoritesRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

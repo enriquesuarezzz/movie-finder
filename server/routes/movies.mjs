@@ -1,12 +1,12 @@
-// server/routes/movies.js
 import { Router } from "express";
+import pool from "../db.mjs";
+
 const router = Router();
-import { query } from "../db.mjs";
 
 // Get all movies
 router.get("/", async (req, res) => {
   try {
-    const [movies] = await query(`
+    const [movies] = await pool.query(`
       SELECT movies.*, genres.name as genre, directors.name as director 
       FROM movies
       LEFT JOIN genres ON movies.genre_id = genres.id
@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
   const { title, release_date, genre_id, director_id } = req.body;
 
   try {
-    const [result] = await query(
+    const [result] = await pool.query(
       `
       INSERT INTO movies (title, release_date, genre_id, director_id) 
       VALUES (?, ?, ?, ?)`,
