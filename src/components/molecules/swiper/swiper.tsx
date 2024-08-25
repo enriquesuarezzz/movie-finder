@@ -22,7 +22,7 @@ export function MoviesSwiper() {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/movies')
+        const response = await fetch(process.env.REACT_APP_API_URL + '/movies')
         const data: Movie[] = await response.json()
         setMovies(data)
       } catch (error) {
