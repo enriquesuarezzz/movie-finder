@@ -7,17 +7,19 @@ import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
+import { Bars } from 'react-loader-spinner'
 
-// Define the Movie interface above (outside of the component)
+// Define the Movie interface
 interface Movie {
   id: number
   title: string
   poster_url: string
+  genre: string
 }
 
 export function MoviesSwiper() {
-  // Define the state with the Movie type
   const [movies, setMovies] = useState<Movie[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -25,38 +27,85 @@ export function MoviesSwiper() {
         const response = await fetch(process.env.REACT_APP_API_URL || '')
         const data: Movie[] = await response.json()
         setMovies(data)
+        setIsLoading(false)
       } catch (error) {
         console.error('Failed to fetch movies:', error)
+        setIsLoading(false)
       }
     }
 
     fetchMovies()
   }, [])
 
+  // Function to filter movies by genre
+  const getMoviesByGenre = (genre: string) => {
+    return movies.filter((movie) => movie.genre === genre)
+  }
+
+  const genres = [
+    'Action',
+    'Comedy',
+    'Drama',
+    'Science Fiction',
+    'Thriller',
+    'Horror',
+    'Romance',
+    'Adventure',
+    'Fantasy',
+    'Mystery',
+  ]
+
   return (
+    // if the data is loading show a loader
     <section className="flex flex-col pt-5 md:pt-10">
-      <h1 className="pb-4 font-onest text-4xl font-bold md:pb-10 md:text-7xl">
-        Genre title when API is ready
-      </h1>
-      <Swiper
-        modules={[Navigation, Pagination, Scrollbar, A11y]}
-        spaceBetween={10}
-        slidesPerView={'auto'}
-        loop={true}
-      >
-        {movies.map((movie) => (
-          <SwiperSlide key={movie.id} className="max-w-[220px] pl-4">
-            <div className="flex flex-col items-center justify-center gap-3">
-              <h1 className="font-onest text-xl">{movie.title}</h1>
-              <img
-                src={movie.poster_url}
-                alt={movie.title}
-                className="w-full"
-              />
+      {isLoading ? (
+        <div className="flex h-40 flex-col items-center justify-center">
+          <Bars
+            height="80"
+            width="80"
+            color="#4fa94d"
+            ariaLabel="bars-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+          <div className="font-onest text-xl font-bold">Loading...</div>
+        </div>
+      ) : (
+        //creating the swipers for each genre
+        genres.map((genre) => {
+          const genreMovies = getMoviesByGenre(genre)
+          if (genreMovies.length === 0) return null // Skip empty genres
+          return (
+            <div key={genre}>
+              <h2 className="pb-4 pt-7 font-onest text-3xl  font-semibold text-blue-700/100  md:pb-6 md:text-5xl ">
+                {genre} Movies
+              </h2>
+              <Swiper
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={10}
+                slidesPerView={'auto'}
+                loop={true}
+              >
+                {genreMovies.map((movie) => (
+                  <SwiperSlide key={movie.id} className="max-w-[250px] pl-4">
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <h1 className="text-nowrap font-onest text-xl">
+                        {movie.title}
+                      </h1>
+                      <img
+                        src={movie.poster_url}
+                        alt={movie.title}
+                        className="w-full"
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+          )
+        })
+      )}
     </section>
   )
 }
