@@ -127,7 +127,7 @@ function ManageMovies() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h2 className="pb-4 pt-6 font-onest text-3xl font-semibold text-blue-600">
+      <h2 className="pb-10 pt-10 font-onest text-3xl font-semibold text-blue-600">
         Manage Movies
       </h2>
       {/* List of movies with edit and delete options */}
@@ -135,7 +135,7 @@ function ManageMovies() {
         {movies.map((movie) => (
           <li
             key={movie.id}
-            className="flex flex-col items-center gap-1 rounded-lg border border-black bg-slate-600/40 p-4 "
+            className="flex flex-col items-center gap-1 rounded-lg border border-gray-300 p-4 font-onest text-lg shadow-lg "
           >
             {movie.poster_url && (
               <img
@@ -147,13 +147,13 @@ function ManageMovies() {
             {movie.title}
             <div className="flex items-center justify-center gap-4 pt-2">
               <button
-                className="text-bold max-w-[150px] rounded-3xl bg-blue-700 px-2 py-1 text-white hover:bg-blue-600"
+                className="text-bold max-w-[150px] rounded-3xl bg-blue-700 px-2 py-1 font-onest text-white hover:bg-blue-600"
                 onClick={() => startEditing(movie)}
               >
                 Edit
               </button>
               <button
-                className="text-bold max-w-[150px] rounded-3xl bg-red-700 px-2 py-1 text-white hover:bg-blue-600"
+                className="text-bold max-w-[150px] rounded-3xl bg-red-700 px-2 py-1 font-onest text-white hover:bg-red-600"
                 onClick={() => handleDeleteMovie(movie.id)}
               >
                 Delete
@@ -164,7 +164,7 @@ function ManageMovies() {
       </ul>
 
       {/* Form to create a new movie */}
-      <div className="flex w-full max-w-[400px] flex-col items-center ">
+      <div className="flex w-full max-w-[400px] flex-col items-center pt-10 ">
         <h3 className="pb-4 pt-2 font-onest text-xl font-semibold ">
           {' '}
           {editingMovie ? 'Edit Movie' : 'Create New Movie'}{' '}
