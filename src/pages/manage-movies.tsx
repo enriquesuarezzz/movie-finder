@@ -21,6 +21,7 @@ function ManageMovies() {
     description: '',
   })
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null)
+  const [showForm, setShowForm] = useState(false) // State to control form visibility
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -64,6 +65,7 @@ function ManageMovies() {
         poster_url: '',
         description: '',
       })
+      setShowForm(false) // Hide the form after creating a movie
     } catch (error) {
       console.error('Failed to create movie:', error)
     }
@@ -97,6 +99,7 @@ function ManageMovies() {
         ),
       )
       setEditingMovie(null)
+      setShowForm(false) // Hide the form after updating a movie
     } catch (error) {
       console.error('Failed to update movie:', error)
     }
@@ -123,6 +126,7 @@ function ManageMovies() {
 
   const startEditing = (movie: Movie) => {
     setEditingMovie(movie)
+    setShowForm(true) // Show the form when editing a movie
   }
 
   return (
@@ -147,13 +151,13 @@ function ManageMovies() {
             {movie.title}
             <div className="flex items-center justify-center gap-4 pt-2">
               <button
-                className="text-bold max-w-[150px] rounded-3xl bg-blue-700 px-2 py-1 font-onest text-white hover:bg-blue-600"
+                className="text-bold max-w-[100px] rounded-3xl bg-blue-700 px-2 py-1 font-onest text-base text-white hover:bg-blue-600"
                 onClick={() => startEditing(movie)}
               >
                 Edit
               </button>
               <button
-                className="text-bold max-w-[150px] rounded-3xl bg-red-700 px-2 py-1 font-onest text-white hover:bg-red-600"
+                className="text-bold max-w-[100px] rounded-3xl bg-red-700 px-2 py-1 font-onest text-base text-white hover:bg-red-600"
                 onClick={() => handleDeleteMovie(movie.id)}
               >
                 Delete
@@ -163,95 +167,127 @@ function ManageMovies() {
         ))}
       </ul>
 
-      {/* Form to create a new movie */}
-      <div className="flex w-full max-w-[400px] flex-col items-center pt-10 ">
-        <h3 className="pb-4 pt-2 font-onest text-xl font-semibold ">
-          {' '}
-          {editingMovie ? 'Edit Movie' : 'Create New Movie'}{' '}
-          {/* TODO: Button to display create or edit */}
-        </h3>
+      {/* Button to show the form */}
+      <button
+        className="text-bold  mt-12 max-w-[200px] rounded-3xl bg-blue-700 px-4 py-2 text-white hover:bg-blue-600"
+        onClick={() => setShowForm(true)}
+      >
+        Create New Movie
+      </button>
 
-        <input
-          type="text"
-          placeholder="Title"
-          value={editingMovie ? editingMovie.title : newMovie.title}
-          className="peer mb-3 w-full rounded-md border-2  pt-2 font-onest text-base  focus:outline-none"
-          onChange={(e) =>
-            editingMovie
-              ? setEditingMovie({ ...editingMovie, title: e.target.value })
-              : setNewMovie({ ...newMovie, title: e.target.value })
-          }
-        />
-        <input
-          type="date"
-          placeholder="Release Date"
-          value={
-            editingMovie ? editingMovie.release_date : newMovie.release_date
-          }
-          className="peer mb-3 w-full rounded-md border-2  pt-2 font-onest text-base  focus:outline-none"
-          onChange={(e) =>
-            editingMovie
-              ? setEditingMovie({
-                  ...editingMovie,
-                  release_date: e.target.value,
-                })
-              : setNewMovie({ ...newMovie, release_date: e.target.value })
-          }
-        />
-        <input
-          type="number"
-          placeholder="Genre ID" // TODO: Add genre dropdown
-          value={editingMovie ? editingMovie.genre_id : newMovie.genre_id}
-          className="peer mb-3 w-full rounded-md border-2  pt-2 font-onest text-base  focus:outline-none"
-          onChange={(e) =>
-            editingMovie
-              ? setEditingMovie({
-                  ...editingMovie,
-                  genre_id: Number(e.target.value),
-                })
-              : setNewMovie({ ...newMovie, genre_id: Number(e.target.value) })
-          }
-        />
-        <input
-          type="number"
-          placeholder="Director ID" // TODO: Add director dropdown
-          value={editingMovie ? editingMovie.director_id : newMovie.director_id}
-          className="peer mb-3 w-full rounded-md border-2  pt-2 font-onest text-base  focus:outline-none"
-          onChange={(e) =>
-            editingMovie
-              ? setEditingMovie({
-                  ...editingMovie,
-                  director_id: Number(e.target.value),
-                })
-              : setNewMovie({
-                  ...newMovie,
-                  director_id: Number(e.target.value),
-                })
-          }
-        />
-        <textarea
-          placeholder="Description"
-          value={editingMovie ? editingMovie.description : newMovie.description}
-          className="peer mb-3 w-full rounded-md border-2  pt-2 font-onest text-base  focus:outline-none"
-          onChange={(e) =>
-            editingMovie
-              ? setEditingMovie({
-                  ...editingMovie,
-                  description: e.target.value,
-                })
-              : setNewMovie({ ...newMovie, description: e.target.value })
-          }
-        ></textarea>
-        <button
-          className="text-bold max-w-[150px] rounded-3xl bg-blue-700 px-4 py-2 text-white hover:bg-blue-600"
-          onClick={editingMovie ? handleUpdateMovie : handleCreateMovie}
-        >
-          {editingMovie ? 'Update Movie' : 'Create Movie'}
-        </button>
-        {editingMovie && (
-          <button onClick={() => setEditingMovie(null)}>Cancel Edit</button>
-        )}
-      </div>
+      {/* Form to create/edit a movie (hidden by default) */}
+      {showForm && (
+        <div className="flex w-full max-w-[400px] flex-col items-center pt-4">
+          <h3 className="pb-4 pt-2 font-onest text-xl font-semibold ">
+            {editingMovie ? 'Edit Movie' : 'Create New Movie'}
+          </h3>
+
+          <input
+            type="text"
+            placeholder="Title"
+            value={editingMovie ? editingMovie.title : newMovie.title}
+            className="peer mb-3 w-full rounded-md border-2  pt-2 font-onest text-base  focus:outline-none"
+            onChange={(e) =>
+              editingMovie
+                ? setEditingMovie({ ...editingMovie, title: e.target.value })
+                : setNewMovie({ ...newMovie, title: e.target.value })
+            }
+          />
+          <input
+            type="date"
+            placeholder="Release Date"
+            value={
+              editingMovie ? editingMovie.release_date : newMovie.release_date
+            }
+            className="peer mb-3 w-full rounded-md border-2  pt-2 font-onest text-base  focus:outline-none"
+            onChange={(e) =>
+              editingMovie
+                ? setEditingMovie({
+                    ...editingMovie,
+                    release_date: e.target.value,
+                  })
+                : setNewMovie({ ...newMovie, release_date: e.target.value })
+            }
+          />
+          <input
+            type="text"
+            placeholder="Poster URL"
+            value={editingMovie ? editingMovie.poster_url : newMovie.poster_url}
+            className="peer mb-3 w-full rounded-md border-2  pt-2 font-onest text-base  focus:outline-none"
+            onChange={(e) =>
+              editingMovie
+                ? setEditingMovie({
+                    ...editingMovie,
+                    poster_url: e.target.value,
+                  })
+                : setNewMovie({ ...newMovie, poster_url: e.target.value })
+            }
+          />
+          <input
+            type="number"
+            placeholder="Genre ID"
+            value={editingMovie ? editingMovie.genre_id : newMovie.genre_id}
+            className="peer mb-3 w-full rounded-md border-2  pt-2 font-onest text-base  focus:outline-none"
+            onChange={(e) =>
+              editingMovie
+                ? setEditingMovie({
+                    ...editingMovie,
+                    genre_id: Number(e.target.value),
+                  })
+                : setNewMovie({ ...newMovie, genre_id: Number(e.target.value) })
+            }
+          />
+          <input
+            type="number"
+            placeholder="Director ID"
+            value={
+              editingMovie ? editingMovie.director_id : newMovie.director_id
+            }
+            className="peer mb-3 w-full rounded-md border-2  pt-2 font-onest text-base  focus:outline-none"
+            onChange={(e) =>
+              editingMovie
+                ? setEditingMovie({
+                    ...editingMovie,
+                    director_id: Number(e.target.value),
+                  })
+                : setNewMovie({
+                    ...newMovie,
+                    director_id: Number(e.target.value),
+                  })
+            }
+          />
+          <textarea
+            placeholder="Description"
+            value={
+              editingMovie ? editingMovie.description : newMovie.description
+            }
+            className="peer mb-3 w-full rounded-md border-2  pt-2 font-onest text-base  focus:outline-none"
+            onChange={(e) =>
+              editingMovie
+                ? setEditingMovie({
+                    ...editingMovie,
+                    description: e.target.value,
+                  })
+                : setNewMovie({ ...newMovie, description: e.target.value })
+            }
+          ></textarea>
+          <button
+            className="text-bold max-w-[150px] rounded-3xl bg-blue-700 px-4 py-2 text-white hover:bg-blue-600"
+            onClick={editingMovie ? handleUpdateMovie : handleCreateMovie}
+          >
+            {editingMovie ? 'Update Movie' : 'Create Movie'}
+          </button>
+          <button
+            className="text-bold mt-3 max-w-[150px] rounded-3xl bg-red-700 px-4 py-2 text-white hover:bg-red-600"
+            onClick={() => {
+              setShowForm(false)
+              setEditingMovie(null)
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      )}
     </div>
   )
 }
