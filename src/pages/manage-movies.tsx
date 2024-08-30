@@ -6,6 +6,7 @@ interface Movie {
   release_date: string
   genre_id: number
   director_id: number
+  poster_url: string
   description: string
 }
 
@@ -16,6 +17,7 @@ function ManageMovies() {
     release_date: '',
     genre_id: 0,
     director_id: 0,
+    poster_url: '',
     description: '',
   })
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null)
@@ -23,7 +25,7 @@ function ManageMovies() {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/movies`)
+        const response = await fetch(`${process.env.REACT_APP_API_URL}`)
         if (!response.ok) {
           throw new Error('Failed to fetch movies')
         }
@@ -39,7 +41,7 @@ function ManageMovies() {
 
   const handleCreateMovie = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/movies`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,6 +61,7 @@ function ManageMovies() {
         release_date: '',
         genre_id: 0,
         director_id: 0,
+        poster_url: '',
         description: '',
       })
     } catch (error) {
@@ -71,7 +74,7 @@ function ManageMovies() {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/movies/${editingMovie.id}`,
+        `${process.env.REACT_APP_API_URL}/${editingMovie.id}`,
         {
           method: 'PUT',
           headers: {
@@ -101,15 +104,12 @@ function ManageMovies() {
 
   const handleDeleteMovie = async (id: number) => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/movies/${id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-      )
+      })
 
       if (!response.ok) {
         throw new Error('Failed to delete movie')
@@ -130,6 +130,39 @@ function ManageMovies() {
       <h2 className="pb-4 pt-6 font-onest text-3xl font-semibold text-blue-600">
         Manage Movies
       </h2>
+      {/* List of movies with edit and delete options */}
+      <ul className="mx-auto flex w-full flex-wrap items-center justify-center gap-4 ">
+        {movies.map((movie) => (
+          <li
+            key={movie.id}
+            className="flex flex-col items-center gap-1 rounded-lg border border-black bg-slate-600/40 p-4 "
+          >
+            {movie.poster_url && (
+              <img
+                src={movie.poster_url}
+                alt={movie.title}
+                className="h-40 w-28"
+              />
+            )}
+            {movie.title}
+            <div className="flex items-center justify-center gap-4 pt-2">
+              <button
+                className="text-bold max-w-[150px] rounded-3xl bg-blue-700 px-2 py-1 text-white hover:bg-blue-600"
+                onClick={() => startEditing(movie)}
+              >
+                Edit
+              </button>
+              <button
+                className="text-bold max-w-[150px] rounded-3xl bg-red-700 px-2 py-1 text-white hover:bg-blue-600"
+                onClick={() => handleDeleteMovie(movie.id)}
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+
       {/* Form to create a new movie */}
       <div className="flex w-full max-w-[400px] flex-col items-center ">
         <h3 className="pb-4 pt-2 font-onest text-xl font-semibold ">
@@ -219,17 +252,6 @@ function ManageMovies() {
           <button onClick={() => setEditingMovie(null)}>Cancel Edit</button>
         )}
       </div>
-
-      {/* List of movies with edit and delete options */}
-      <ul>
-        {movies.map((movie) => (
-          <li key={movie.id}>
-            {movie.title} ({movie.release_date})
-            <button onClick={() => startEditing(movie)}>Edit</button>
-            <button onClick={() => handleDeleteMovie(movie.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
     </div>
   )
 }
