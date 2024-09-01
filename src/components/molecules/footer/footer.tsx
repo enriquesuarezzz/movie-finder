@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Logo } from '../../atoms/svg/logo'
 
 export function Footer() {
@@ -7,31 +8,30 @@ export function Footer() {
         <div className="flex flex-col items-center  md:flex-row md:justify-between">
           <div className="flex items-center justify-center gap-2 pb-6">
             <Logo color="white" />
-            <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
+            <Link
+              className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white"
+              to="/"
+            >
               MovieFinder
-            </span>
+            </Link>
           </div>
 
           <ul className="mb-6 flex flex-wrap items-center text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
             <li>
-              <a href="/" className="me-4 hover:underline md:me-6">
+              <Link to="/" className="me-4 hover:underline md:me-6">
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/" className="me-4 hover:underline md:me-6">
+              <Link to="/my-movies" className="me-4 hover:underline md:me-6">
                 My Movies
-              </a>
+              </Link>
             </li>
+
             <li>
-              <a href="/" className="me-4 hover:underline md:me-6">
-                Licensing
-              </a>
-            </li>
-            <li>
-              <a href="/" className="hover:underline">
+              <Link to="/contact" className="hover:underline">
                 Contact
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
