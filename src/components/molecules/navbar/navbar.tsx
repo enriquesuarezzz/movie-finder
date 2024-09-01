@@ -4,6 +4,7 @@ import Burguer from '../../atoms/svg/burguer'
 import { Logo } from '../../atoms/svg/logo'
 import Search from '../../atoms/svg/search'
 import CloseIcon from '../../atoms/svg/close'
+import { Link } from 'react-router-dom'
 
 export function Navbar() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -52,10 +53,13 @@ export function Navbar() {
     <nav className="navbar navbar-expand-lg bg-light relative flex w-full justify-between pb-4 pl-2 pt-3 font-onest md:pl-10">
       <div className="flex items-center gap-2 font-onest text-xl font-bold md:gap-8">
         <Logo />
-        <button className="hover:text-blue-500">MovieFinder</button>
-        <button className="hidden hover:text-blue-500 md:flex">
+
+        <Link className="hover:text-blue-500" to="/">
+          MovieFinder
+        </Link>
+        <Link className="hidden hover:text-blue-500 md:flex" to="/my-movies">
           My Movies
-        </button>
+        </Link>
       </div>
       <div className="flex items-center gap-2 pr-2 font-bold md:gap-8 md:pr-10">
         {!isSearchOpen && (
@@ -107,17 +111,23 @@ export function Navbar() {
       {isMenuOpen && (
         <div className="fixed right-0 top-0 z-50 flex h-full w-80 flex-col bg-blue-500/60 p-6 px-10 shadow-lg md:hidden">
           <div className="mb-4 flex w-full justify-between">
-            <button className="flex gap-2 text-left text-2xl font-bold text-white">
+            <Link
+              className="flex gap-2 text-left text-2xl font-bold text-white "
+              to="/"
+            >
               <Logo color="white" />
               MovieFinder
-            </button>
+            </Link>
             <button onClick={toggleMenu}>
               <CloseIcon />
             </button>
           </div>
-          <button className="mb-2 w-full text-left text-lg text-white">
+          <Link
+            className="mb-2 w-full text-left text-lg text-white"
+            to="/my-movies"
+          >
             My Movies
-          </button>
+          </Link>
 
           <button className="mb-2 w-full text-left text-lg text-white">
             Sign In
