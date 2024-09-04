@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 
 export function Navbar() {
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<any[]>([]) // Add state for search results
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
 
@@ -19,7 +20,7 @@ export function Navbar() {
       )
       const data = await response.json()
       console.log('Search results:', data)
-      // Do something with the data
+      setSearchResults(data)
     } catch (error) {
       console.error('Failed to search movies:', error)
     }
@@ -42,7 +43,7 @@ export function Navbar() {
     if (value) {
       debouncedSearch(value)
     } else {
-      return
+      setSearchResults([]) // Clear results when input is empty
     }
   }
 
@@ -51,6 +52,10 @@ export function Navbar() {
   }
 
   const toggleSearch = () => {
+    if (isSearchOpen) {
+      setSearchQuery('') // Clear search query
+      setSearchResults([]) // Clear search results
+    }
     setIsSearchOpen(!isSearchOpen)
   }
 
@@ -101,6 +106,38 @@ export function Navbar() {
           <button onClick={toggleSearch} className="mr-4 text-white">
             <CloseIcon />
           </button>
+        </div>
+      )}
+
+      {/* Search Results */}
+      {searchResults.length > 0 && (
+        <div className="absolute left-0 right-0 top-full z-50 mt-12 bg-white shadow-lg">
+          <ul>
+            {searchResults.map((movie) => (
+              <li key={movie.id} className="border-b border-gray-200 p-4">
+                <Link to={`/movies/${movie.id}`}>
+                  <div className="flex items-center">
+                    <img
+                      src={movie.poster_url}
+                      alt={movie.title}
+                      className="h-16 w-12 object-cover"
+                    />
+                    <div className="ml-4">
+                      <h3 className="text-lg font-bold">{movie.title}</h3>
+                      <p className="text-gray-600">{movie.release_date}</p>
+                    </div>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* No Results Found */}
+      {searchQuery && searchResults.length === 0 && (
+        <div className="absolute left-0 right-0 top-full z-50 mt-12 bg-white p-4 text-center shadow-lg">
+          <p>No movies found.</p>
         </div>
       )}
 
