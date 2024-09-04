@@ -11,11 +11,11 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
 
-  // Example API function
   const searchMovies = async (query: string) => {
     try {
       const response = await fetch(
-        process.env.API_URL + `search?query=${query}`,
+        process.env.REACT_APP_API_URL +
+          `/search?query=${encodeURIComponent(query)}`,
       )
       const data = await response.json()
       console.log('Search results:', data)
@@ -29,16 +29,21 @@ export function Navbar() {
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       console.log('Performing search for:', query)
-      searchMovies(query) // Make the API call here
+      searchMovies(query)
     }, 300), // 300ms delay
     [searchMovies], // Include searchMovies as a dependency
   )
 
   // Handle input change and call debounced search
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+    const value = e.target.value.trim()
     setSearchQuery(value)
-    debouncedSearch(value)
+
+    if (value) {
+      debouncedSearch(value)
+    } else {
+      return
+    }
   }
 
   const toggleMenu = () => {
