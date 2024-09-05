@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
+//data interfaces
 interface Movie {
   id: number
   title: string
@@ -10,8 +11,21 @@ interface Movie {
   description: string
 }
 
+interface Genre {
+  id: number
+  name: string
+}
+
+interface Director {
+  id: number
+  name: string
+}
+
+//states to store data
 function ManageMovies() {
   const [movies, setMovies] = useState<Movie[]>([])
+  const [genres, setGenres] = useState<Genre[]>([])
+  const [director, setDirector] = useState<Director[]>([])
   const [newMovie, setNewMovie] = useState<Omit<Movie, 'id'>>({
     title: '',
     release_date: '',
@@ -21,28 +35,46 @@ function ManageMovies() {
     description: '',
   })
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null)
-  const [showForm, setShowForm] = useState(false) // State to control form visibility
+  const [showForm, setShowForm] = useState(false)
 
+  // Fetch data from API
   useEffect(() => {
-    const fetchMovies = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}`)
-        if (!response.ok) {
-          throw new Error('Failed to fetch movies')
+        const [moviesResponse, genresResponse, directorsResponse] =
+          await Promise.all([
+            fetch(`${process.env.REACT_APP_API_URL}/movies`), // fetch movies
+            fetch(`${process.env.REACT_APP_API_URL}/genres`), // fetch genres
+            fetch(`${process.env.REACT_APP_API_URL}/directors`), // fetch directors
+          ])
+
+        if (!moviesResponse.ok || !genresResponse.ok || !directorsResponse.ok) {
+          throw new Error('Failed to fetch data')
         }
-        const data: Movie[] = await response.json()
-        setMovies(data)
+
+        // Parse response data
+
+        const moviesData: Movie[] = await moviesResponse.json()
+        const genresData: Genre[] = await genresResponse.json()
+        const directorsData: Director[] = await directorsResponse.json()
+
+        // Set data in state
+
+        setMovies(moviesData)
+        setGenres(genresData)
+        setDirector(directorsData)
       } catch (error) {
-        console.error('Error fetching movies:', error)
+        console.error('Error fetching data:', error)
       }
     }
 
-    fetchMovies()
+    fetchData()
   }, [])
 
+  // function to handle create movie
   const handleCreateMovie = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/movies`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,18 +97,19 @@ function ManageMovies() {
         poster_url: '',
         description: '',
       })
-      setShowForm(false) // Hide the form after creating a movie
+      setShowForm(false)
     } catch (error) {
       console.error('Failed to create movie:', error)
     }
   }
 
+  // function to handle update movie
   const handleUpdateMovie = async () => {
     if (!editingMovie) return
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/${editingMovie.id}`,
+        `${process.env.REACT_APP_API_URL}/movies/${editingMovie.id}`,
         {
           method: 'PUT',
           headers: {
@@ -99,20 +132,24 @@ function ManageMovies() {
         ),
       )
       setEditingMovie(null)
-      setShowForm(false) // Hide the form after updating a movie
+      setShowForm(false)
     } catch (error) {
       console.error('Failed to update movie:', error)
     }
   }
 
+  // function to handle delete movie
   const handleDeleteMovie = async (id: number) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/movies/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         },
-      })
+      )
 
       if (!response.ok) {
         throw new Error('Failed to delete movie')
@@ -124,17 +161,19 @@ function ManageMovies() {
     }
   }
 
+  // function to start editing movie and show form
   const startEditing = (movie: Movie) => {
     setEditingMovie(movie)
-    setShowForm(true) // Show the form when editing a movie
+    setShowForm(true)
   }
 
   return (
     <div className="flex flex-col items-center justify-center">
+      {/* title */}
       <h2 className="pb-10 pt-10 font-onest text-3xl font-semibold text-blue-600">
         Manage Movies
       </h2>
-      {/* List of movies with edit and delete options */}
+      {/* movies list with edit and delte buttons */}
       <ul className="mx-auto flex w-full flex-wrap items-center justify-center gap-4 ">
         {movies.map((movie) => (
           <li
@@ -167,7 +206,7 @@ function ManageMovies() {
         ))}
       </ul>
 
-      {/* Button to show the form */}
+      {/* create new movie form */}
       <button
         className="text-bold  mt-12 max-w-[200px] rounded-3xl bg-blue-700 px-4 py-2 text-white hover:bg-blue-600"
         onClick={() => setShowForm(true)}
@@ -175,13 +214,13 @@ function ManageMovies() {
         Create New Movie
       </button>
 
-      {/* Form to create/edit a movie (hidden by default) */}
       {showForm && (
         <div className="flex w-full max-w-[400px] flex-col items-center pt-4">
           <h3 className="pb-4 pt-2 font-onest text-xl font-semibold ">
             {editingMovie ? 'Edit Movie' : 'Create New Movie'}
           </h3>
 
+          {/* title input */}
           <input
             type="text"
             placeholder="Title"
@@ -193,6 +232,8 @@ function ManageMovies() {
                 : setNewMovie({ ...newMovie, title: e.target.value })
             }
           />
+
+          {/* release date input */}
           <input
             type="date"
             placeholder="Release Date"
@@ -209,6 +250,8 @@ function ManageMovies() {
                 : setNewMovie({ ...newMovie, release_date: e.target.value })
             }
           />
+
+          {/* poster url input */}
           <input
             type="text"
             placeholder="Poster URL"
@@ -223,9 +266,8 @@ function ManageMovies() {
                 : setNewMovie({ ...newMovie, poster_url: e.target.value })
             }
           />
-          <input
-            type="number"
-            placeholder="Genre ID"
+          {/* Dropdown for Genre */}
+          <select
             value={editingMovie ? editingMovie.genre_id : newMovie.genre_id}
             className="peer mb-3 w-full rounded-md border-2  pt-2 font-onest text-base  focus:outline-none"
             onChange={(e) =>
@@ -234,12 +276,22 @@ function ManageMovies() {
                     ...editingMovie,
                     genre_id: Number(e.target.value),
                   })
-                : setNewMovie({ ...newMovie, genre_id: Number(e.target.value) })
+                : setNewMovie({
+                    ...newMovie,
+                    genre_id: Number(e.target.value),
+                  })
             }
-          />
-          <input
-            type="number"
-            placeholder="Director ID"
+          >
+            <option value={0}>Select Genre</option>
+            {genres.map((genre) => (
+              <option key={genre.id} value={genre.id}>
+                {genre.name}
+              </option>
+            ))}
+          </select>
+
+          {/* Dropdown for Director */}
+          <select
             value={
               editingMovie ? editingMovie.director_id : newMovie.director_id
             }
@@ -255,7 +307,16 @@ function ManageMovies() {
                     director_id: Number(e.target.value),
                   })
             }
-          />
+          >
+            <option value={0}>Select Director</option>
+            {director.map((director) => (
+              <option key={director.id} value={director.id}>
+                {director.name}
+              </option>
+            ))}
+          </select>
+
+          {/* description input */}
           <textarea
             placeholder="Description"
             value={
@@ -271,6 +332,8 @@ function ManageMovies() {
                 : setNewMovie({ ...newMovie, description: e.target.value })
             }
           ></textarea>
+
+          {/* create/update button */}
           <button
             className="text-bold max-w-[150px] rounded-3xl bg-blue-700 px-4 py-2 text-white hover:bg-blue-600"
             onClick={editingMovie ? handleUpdateMovie : handleCreateMovie}
