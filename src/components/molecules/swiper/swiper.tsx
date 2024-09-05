@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import 'swiper/css'
@@ -24,7 +24,9 @@ export function MoviesSwiper() {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await fetch(process.env.REACT_APP_API_URL || '')
+        const response = await fetch(
+          process.env.REACT_APP_API_URL + '/movies' || '',
+        )
         const data: Movie[] = await response.json()
         setMovies(data)
         setIsLoading(false)
