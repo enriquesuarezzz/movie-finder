@@ -1,5 +1,3 @@
-import { Header } from '../components/molecules/header/header'
-import { Layout } from '../components/molecules/layout/layout'
 import { MoviesSwiper } from '../components/molecules/swiper/swiper'
 
 function Home() {
