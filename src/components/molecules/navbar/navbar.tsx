@@ -16,7 +16,7 @@ export function Navbar() {
     try {
       const response = await fetch(
         process.env.REACT_APP_API_URL +
-          `/search?query=${encodeURIComponent(query)}`,
+          `/movies/search?query=${encodeURIComponent(query)}`,
       )
       const data = await response.json()
       console.log('Search results:', data)
