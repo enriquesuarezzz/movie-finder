@@ -11,6 +11,7 @@ import { Layout } from './components/molecules/layout/layout'
 import Home from './pages/home'
 import { Contact } from './pages/contact'
 import ManageMovies from './pages/manage-movies'
+import MovieDetails from './components/molecules/movie_details/movie_details'
 
 function App() {
   const isAuthenticated = true // Replace with actual authentication logic
@@ -28,6 +29,7 @@ function App() {
               element={<ManageMovies />}
               // element={<ProtectedRoute isAuthenticated={isAuthenticated} element={<ManageMovies />} />}
             />
+            <Route path="/movies/:id" element={<MovieDetails />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
         </div>

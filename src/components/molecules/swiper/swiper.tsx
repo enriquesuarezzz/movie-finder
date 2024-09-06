@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
-
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
-
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
 import { Bars } from 'react-loader-spinner'
+import { useNavigate } from 'react-router-dom'
 
 // Define the Movie interface
 interface Movie {
@@ -20,6 +19,8 @@ interface Movie {
 export function MoviesSwiper() {
   const [movies, setMovies] = useState<Movie[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -38,6 +39,19 @@ export function MoviesSwiper() {
 
     fetchMovies()
   }, [])
+
+  // Function to create a slug from the movie title
+  const createSlug = (id: number) => {
+    return id
+  }
+
+  // Handle poster click
+  const handlePosterClick = (movie: Movie) => {
+    const slug = createSlug(movie.id)
+
+    // Redirect to a new page (e.g., movie details page) based on the slug
+    navigate(`/movies/${slug}`)
+  }
 
   // Function to filter movies by genre
   const getMoviesByGenre = (genre: string) => {
@@ -99,6 +113,7 @@ export function MoviesSwiper() {
                         src={movie.poster_url}
                         alt={movie.title}
                         className="w-full"
+                        onClick={() => handlePosterClick(movie)}
                       />
                     </div>
                   </SwiperSlide>
