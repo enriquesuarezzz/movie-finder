@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { z } from 'zod'
+import { z, ZodError } from 'zod'
 
 const movieSchema = z.object({
   id: z.number().optional(), // Optional for creation
@@ -10,13 +10,27 @@ const movieSchema = z.object({
       /^\d{4}-\d{2}-\d{2}$/,
       'Release date must be in the format YYYY-MM-DD',
     ),
-  genre_id: z.number().positive('Genre ID must be a positive number'),
-  director_id: z.number().positive('Director ID must be a positive number'),
+  genre_id: z.number().positive('Genre ID must be a positive number'), //TODO: validate between existing genres on BBDD
+  director_id: z.number().positive('Director ID must be a positive number'), //TODO: validate between existing directors on BBDD
   poster_url: z.string().url('Invalid URL'),
-  description: z.string().optional(),
+  description: z
+    .string()
+    .min(10, 'Description must be at least 10 characters long'),
 })
-// Infer the TypeScript type from Zod schema
-type Movie = z.infer<typeof movieSchema>
+type Movie = z.infer<typeof movieSchema> // Infer the Movie type from the schema
+
+type Errors = {
+  title?: string
+  release_date?: string
+  genre_id?: string
+  director_id?: string
+  poster_url?: string
+  description?: string
+}
+type FieldErrors = {
+  _errors: string[]
+}
+
 interface Genre {
   id: number
   name: string
@@ -42,6 +56,42 @@ function ManageMovies() {
   })
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [errors, setErrors] = useState<Errors>({})
+
+  const validateMovie = () => {
+    try {
+      movieSchema.parse(newMovie)
+      setErrors({})
+      return true
+    } catch (err) {
+      if (err instanceof ZodError) {
+        type FieldError = {
+          _errors: string[]
+        }
+
+        const fieldErrors = err.format() as Record<
+          string,
+          FieldError | string[]
+        >
+
+        const formattedErrors: Errors = {}
+
+        for (const key in fieldErrors) {
+          const error = fieldErrors[key]
+          if (Array.isArray(error)) {
+            // Handle the case where fieldErrors[key] is an array of strings
+            formattedErrors[key as keyof Errors] = error[0]
+          } else if (error && Array.isArray(error._errors)) {
+            // Handle the case where fieldErrors[key] is an object with _errors property
+            formattedErrors[key as keyof Errors] = error._errors[0]
+          }
+        }
+
+        setErrors(formattedErrors)
+      }
+      return false
+    }
+  }
 
   // Fetch data from API
   useEffect(() => {
@@ -233,7 +283,6 @@ function ManageMovies() {
           <h3 className="pb-4 pt-2 font-onest text-xl font-semibold ">
             {editingMovie ? 'Edit Movie' : 'Create New Movie'}
           </h3>
-
           {/* title input */}
           <input
             type="text"
@@ -246,7 +295,8 @@ function ManageMovies() {
                 : setNewMovie({ ...newMovie, title: e.target.value })
             }
           />
-
+          {errors.title && <p className="text-red-500">{errors.title}</p>}{' '}
+          {/* Display error if any */}
           {/* release date input */}
           <input
             type="date"
@@ -264,7 +314,9 @@ function ManageMovies() {
                 : setNewMovie({ ...newMovie, release_date: e.target.value })
             }
           />
-
+          {errors.release_date && (
+            <p className="text-red-500">{errors.release_date}</p>
+          )}{' '}
           {/* poster url input */}
           <input
             type="text"
@@ -280,6 +332,9 @@ function ManageMovies() {
                 : setNewMovie({ ...newMovie, poster_url: e.target.value })
             }
           />
+          {errors.poster_url && (
+            <p className="text-red-500">{errors.poster_url}</p>
+          )}{' '}
           {/* Dropdown for Genre */}
           <select
             value={editingMovie ? editingMovie.genre_id : newMovie.genre_id}
@@ -303,7 +358,7 @@ function ManageMovies() {
               </option>
             ))}
           </select>
-
+          {errors.genre_id && <p className="text-red-500">{errors.genre_id}</p>}{' '}
           {/* Dropdown for Director */}
           <select
             value={
@@ -329,7 +384,9 @@ function ManageMovies() {
               </option>
             ))}
           </select>
-
+          {errors.director_id && (
+            <p className="text-red-500">{errors.director_id}</p>
+          )}{' '}
           {/* description input */}
           <textarea
             placeholder="Description"
@@ -346,11 +403,17 @@ function ManageMovies() {
                 : setNewMovie({ ...newMovie, description: e.target.value })
             }
           ></textarea>
-
+          {errors.description && (
+            <p className="text-red-500">{errors.description}</p>
+          )}{' '}
           {/* create/update button */}
           <button
             className="text-bold max-w-[150px] rounded-3xl bg-blue-700 px-4 py-2 text-white hover:bg-blue-600"
-            onClick={editingMovie ? handleUpdateMovie : handleCreateMovie}
+            onClick={() => {
+              if (validateMovie()) {
+                editingMovie ? handleUpdateMovie() : handleCreateMovie()
+              }
+            }}
           >
             {editingMovie ? 'Update Movie' : 'Create Movie'}
           </button>
