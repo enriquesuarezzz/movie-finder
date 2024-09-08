@@ -1,16 +1,22 @@
 import { useEffect, useState } from 'react'
+import { z } from 'zod'
 
-//data interfaces
-interface Movie {
-  id: number
-  title: string
-  release_date: string
-  genre_id: number
-  director_id: number
-  poster_url: string
-  description: string
-}
-
+const movieSchema = z.object({
+  id: z.number().optional(), // Optional for creation
+  title: z.string().min(3, 'Title must be at least 3 characters long'),
+  release_date: z
+    .string()
+    .regex(
+      /^\d{4}-\d{2}-\d{2}$/,
+      'Release date must be in the format YYYY-MM-DD',
+    ),
+  genre_id: z.number().positive('Genre ID must be a positive number'),
+  director_id: z.number().positive('Director ID must be a positive number'),
+  poster_url: z.string().url('Invalid URL'),
+  description: z.string().optional(),
+})
+// Infer the TypeScript type from Zod schema
+type Movie = z.infer<typeof movieSchema>
 interface Genre {
   id: number
   name: string
@@ -74,6 +80,10 @@ function ManageMovies() {
   // function to handle create movie
   const handleCreateMovie = async () => {
     try {
+      // Validate the newMovie data with Zod
+      movieSchema.parse(newMovie) // This throws an error if validation fails
+
+      // Proceed with API call if validation passes
       const response = await fetch(`${process.env.REACT_APP_API_URL}/movies`, {
         method: 'POST',
         headers: {
@@ -99,7 +109,7 @@ function ManageMovies() {
       })
       setShowForm(false)
     } catch (error) {
-      console.error('Failed to create movie:', error)
+      console.error('Validation or API error:', error)
     }
   }
 
@@ -139,7 +149,11 @@ function ManageMovies() {
   }
 
   // function to handle delete movie
-  const handleDeleteMovie = async (id: number) => {
+  const handleDeleteMovie = async (id: number | undefined) => {
+    if (id === undefined) {
+      console.error('Movie ID is undefined')
+      return
+    }
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/movies/${id}`,
