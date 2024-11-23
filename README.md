@@ -26,6 +26,6 @@ To get started, just clone the repository and run `npm install && npm start`:
 
     git clone https://github.com/enriquesuarezzz/movie-finder.git
     npm install
-    npm start
+    npm run dev
 
 Note: If you are running on Windows run install --noptional flag (i.e. `npm install --no-optional`) which will skip installing fsevents.
